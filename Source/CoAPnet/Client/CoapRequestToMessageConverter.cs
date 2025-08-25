@@ -24,10 +24,12 @@ namespace CoAPnet.Client
                 Payload = request.Payload
             };
 
-            ApplyUriHost(request, message);
-            ApplyUriPort(request, message);
-            ApplyUriPath(request, message);
-            ApplyUriQuery(request, message);
+            ApplyUriHost(request, message); // 3
+            ApplyUriPort(request, message); // 7
+            ApplyUriPath(request, message); // 11
+            ApplyContentType(request, message); // 12
+            ApplyUriQuery(request, message); // 15
+            ApplyBlock1(request, message); // 27
 
             return message;
         }
@@ -78,6 +80,26 @@ namespace CoAPnet.Client
             {
                 message.Options.Add(_optionFactory.CreateUriQuery(query));
             }
+        }
+
+        void ApplyContentType(CoapRequest request, CoapMessage message)
+        {
+            if (request.Options.ContentFormat == null)
+            {
+                return;
+            }
+
+            message.Options.Add(_optionFactory.CreateContentFormat(request.Options.ContentFormat.Value));
+        }
+
+        void ApplyBlock1(CoapRequest request, CoapMessage message)
+        {
+            if (request.Options.Block1 == null)
+            {
+                return;
+            }
+
+            message.Options.Add(_optionFactory.CreateBlock1(request.Options.Block1.AsInt()));
         }
 
         static CoapMessageCode GetMessageCode(CoapRequestMethod method)

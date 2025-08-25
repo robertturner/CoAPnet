@@ -38,14 +38,16 @@ namespace CoAPnet.Transport
             _networkStream?.Dispose();
         }
 
-        public Task<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public ValueTask<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
-            return _networkStream.ReadAsync(buffer.Array, buffer.Offset, buffer.Count, cancellationToken);
+            //return _networkStream.ReadAsync(buffer.Array, buffer.Offset, buffer.Count, cancellationToken);
+            return _networkStream.ReadAsync(buffer, cancellationToken);
         }
 
-        public Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public ValueTask SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
-            return _networkStream.WriteAsync(buffer.Array, buffer.Offset, buffer.Count, cancellationToken);
+            //await _networkStream.WriteAsync(buffer.Array, buffer.Offset, buffer.Count, cancellationToken).ConfigureAwait(false);
+            return _networkStream.WriteAsync(buffer, cancellationToken);
         }
     }
 }

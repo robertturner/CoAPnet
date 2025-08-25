@@ -52,7 +52,12 @@ namespace CoAPnet.Client
             return options;
         }
 
-        static CoapResponseStatusCode GetStatusCode(CoapMessage message)
+        static CoapStatusCode GetStatusCode(CoapMessage message)
+        {
+            return (CoapStatusCode)(message.Code.Detail | message.Code.Class << 5);
+        }
+
+        static CoapResponseStatusCode GetResponseStatusCode(CoapMessage message)
         {
             if (message.Code.Equals(CoapMessageCodes.Empty))
             {

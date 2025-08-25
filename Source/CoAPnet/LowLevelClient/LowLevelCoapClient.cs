@@ -33,7 +33,7 @@ namespace CoAPnet.LowLevelClient
             _messageDecoder = new CoapMessageDecoder(logger);
         }
 
-        public async Task SendAsync(CoapMessage message, CancellationToken cancellationToken)
+        public async ValueTask SendAsync(CoapMessage message, CancellationToken cancellationToken)
         {
             if (message is null)
             {
@@ -53,7 +53,7 @@ namespace CoAPnet.LowLevelClient
             }
         }
 
-        public async Task<CoapMessage> ReceiveAsync(CancellationToken cancellationToken)
+        public async ValueTask<CoapMessage> ReceiveAsync(CancellationToken cancellationToken)
         {
             var datagramLength = await _transportLayerAdapter.ReceiveAsync(_receiveBuffer, cancellationToken)
                 .ConfigureAwait(false);
@@ -88,13 +88,22 @@ namespace CoAPnet.LowLevelClient
             _transportLayerAdapter = new CoapTransportLayerAdapter(transportLayer, _logger);
             try
             {
+                if (!IPAddress.TryParse(options.ClientIP, out var ipAddress))
+                {
+                    IPAddress.TryParse("0.0.0.0", out var ipAddress2);
+                    ipAddress = ipAddress2;
+                }
+                var clientEndPoint = new IPEndPoint(ipAddress, options.ClientPort);
                 var transportLayerConnectOptions = new CoapTransportLayerConnectOptions
                 {
-                    EndPoint = await ResolveIpEndPoint(options).ConfigureAwait(false)
+                    EndPoint = await ResolveIpEndPoint(options).ConfigureAwait(false),
+                    ClientEndPoint = clientEndPoint
                 };
 
                 await _transportLayerAdapter.ConnectAsync(transportLayerConnectOptions, cancellationToken)
                     .ConfigureAwait(false);
+                options.ClientPort = transportLayerConnectOptions.ClientEndPoint.Port;
+                options.ClientIP = transportLayerConnectOptions.ClientEndPoint.Address.ToString();
             }
             catch (Exception)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoAPnet.Protocol.Options;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -79,6 +80,18 @@ namespace CoAPnet.Client
             }
 
             return WithPayload(Encoding.UTF8.GetBytes(value));
+        }
+
+        public CoapRequestBuilder WithContentFormat(CoapMessageContentFormat value)
+        {
+            _request.Options.ContentFormat = value;
+            return this;
+        }
+
+        public CoapRequestBuilder WithBlock1(CoapOptionBlocks block)
+        {
+            _request.Options.Block1 = block;
+            return this;
         }
 
         public CoapRequest Build()

@@ -23,6 +23,18 @@ namespace CoAPnet.Client
             return this;
         }
 
+        public CoapClientConnectOptionsBuilder WithClientIP(string value)
+        {
+            _options.ClientIP = value ?? throw new ArgumentNullException(nameof(value));
+            return this;
+        }
+
+        public CoapClientConnectOptionsBuilder WithClientPort(int value)
+        {
+            _options.ClientPort = value;
+            return this;
+        }
+
         public CoapClientConnectOptionsBuilder WithEncryptedPort()
         {
             return WithPort(CoapDefaultPort.Encrypted);

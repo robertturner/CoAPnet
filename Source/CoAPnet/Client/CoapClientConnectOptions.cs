@@ -12,6 +12,12 @@ namespace CoAPnet.Client
         }
 
         public int Port { get; set; } = CoapDefaultPort.Unencrypted;
+        public string ClientIP
+        {
+            get; set;
+        } = "0.0.0.0";
+
+        public int ClientPort { get; set; } = 0;
 
         public TimeSpan CommunicationTimeout { get; set; } = TimeSpan.FromSeconds(10);
 

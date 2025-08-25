@@ -94,7 +94,7 @@ namespace CoAPnet.Client
             }
         }
 
-        Task DeregisterObservation(CoapMessage message)
+        ValueTask DeregisterObservation(CoapMessage message)
         {
             var emptyResponse = new CoapMessage
             {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,13 +18,19 @@ namespace CoAPnet.Transport
 
             Dispose();
 
-            _udpClient = new UdpClient(0, options.EndPoint.AddressFamily);
-
-            return Task.FromResult(0);
+            _udpClient = new UdpClient(options.ClientEndPoint);
+            options.ClientEndPoint = (System.Net.IPEndPoint)_udpClient.Client.LocalEndPoint;
+            return Task.CompletedTask;
         }
 
-        public async Task<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public async ValueTask<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
+#if true
+            var receivedAddress = new IPEndPoint(IPAddress.Any, 0);
+            var ret = await _udpClient.Client.ReceiveFromAsync(buffer, SocketFlags.None, receivedAddress, cancellationToken).ConfigureAwait(false);
+            return ret.ReceivedBytes;
+
+#else
 #if NET6_0_OR_GREATER
             var receiveResult = await _udpClient.ReceiveAsync(cancellationToken).ConfigureAwait(false);
 #else
@@ -32,13 +40,15 @@ namespace CoAPnet.Transport
             Array.Copy(receiveResult.Buffer, 0, buffer.Array, buffer.Offset, receiveResult.Buffer.Length);
 
             return receiveResult.Buffer.Length;
+#endif
         }
 
-        public Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public async ValueTask SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
             ThrowIfNotConnected();
 
-            return _udpClient.SendAsync(buffer.Array, buffer.Count, _connectOptions.EndPoint);
+            await _udpClient.Client.SendToAsync(buffer, SocketFlags.None, _connectOptions.EndPoint, cancellationToken).ConfigureAwait(false);
+            //await _udpClient.SendAsync(buffer.Array, buffer.Count, _connectOptions.EndPoint);
         }
 
         public void Dispose()

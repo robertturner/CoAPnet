@@ -8,7 +8,7 @@ namespace CoAPnet.Client
     {
         Task ConnectAsync(CoapClientConnectOptions options, CancellationToken cancellationToken);
 
-        Task<CoapResponse> RequestAsync(CoapRequest request, CancellationToken cancellationToken);
+        ValueTask<CoapResponse> RequestAsync(CoapRequest request, CancellationToken cancellationToken);
 
         Task<CoapObserveResponse> ObserveAsync(CoapObserveOptions options, CancellationToken cancellationToken);
 

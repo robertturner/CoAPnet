@@ -8,5 +8,9 @@ namespace CoAPnet.Transport
         {
             get; set;
         }
+        public IPEndPoint ClientEndPoint
+        {
+            get; set;
+        }
     }
 }

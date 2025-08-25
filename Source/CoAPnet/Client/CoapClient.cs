@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using CoAPnet.Internal;
@@ -42,10 +43,16 @@ namespace CoAPnet.Client
             await _lowLevelClient.ConnectAsync(options, cancellationToken).ConfigureAwait(false);
 
             _cancellationToken = new CancellationTokenSource();
-            ParallelTask.StartLongRunning(() => ReceiveMessages(_cancellationToken.Token), _cancellationToken.Token);
+            ParallelTask.StartLongRunning(() =>
+            {
+                //Debug.WriteLine($"Long Running Start ID: {Environment.CurrentManagedThreadId}");
+                var ret = ReceiveMessages(_cancellationToken.Token);
+                //Debug.WriteLine($"Long Running End ID: {Environment.CurrentManagedThreadId}");
+                return ret;
+            }, _cancellationToken.Token);
         }
 
-        public async Task<CoapResponse> RequestAsync(CoapRequest request, CancellationToken cancellationToken)
+        public async ValueTask<CoapResponse> RequestAsync(CoapRequest request, CancellationToken cancellationToken)
         {
             if (request is null)
             {
@@ -136,7 +143,7 @@ namespace CoAPnet.Client
             }
         }
 
-        internal async Task<CoapMessage> RequestAsync(CoapMessage requestMessage, CancellationToken cancellationToken)
+        internal async ValueTask<CoapMessage> RequestAsync(CoapMessage requestMessage, CancellationToken cancellationToken)
         {
             if (requestMessage is null)
             {
@@ -152,6 +159,7 @@ namespace CoAPnet.Client
                 await _lowLevelClient.SendAsync(requestMessage, cancellationToken).ConfigureAwait(false);
 
                 var responseMessage = await responseAwaiter.WaitOneAsync(_connectOptions.CommunicationTimeout)
+                //var responseMessage = await responseAwaiter.WaitOneAsync(cancellationToken)
                     .ConfigureAwait(false);
 
                 if (responseMessage.Code.Equals(CoapMessageCodes.Empty))

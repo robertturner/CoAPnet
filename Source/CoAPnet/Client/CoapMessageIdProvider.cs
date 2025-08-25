@@ -4,9 +4,7 @@ namespace CoAPnet.Client
 {
     public sealed class CoapMessageIdProvider
     {
-        readonly object _syncRoot = new object();
-
-        ushort _value;
+        int _value;
 
         public CoapMessageIdProvider()
         {
@@ -21,12 +19,7 @@ namespace CoAPnet.Client
 
         public ushort Next()
         {
-            lock (_syncRoot)
-            {
-                var result = _value;
-                _value++;
-                return _value;
-            }
+            return (ushort)System.Threading.Interlocked.Increment(ref _value);
         }
     }
 }

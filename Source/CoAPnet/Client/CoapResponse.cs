@@ -2,7 +2,7 @@
 {
     public sealed class CoapResponse
     {
-        public CoapResponseStatusCode StatusCode
+        public CoapStatusCode StatusCode
         {
             get; set;
         }

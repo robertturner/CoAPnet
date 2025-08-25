@@ -7,8 +7,8 @@ namespace CoAPnet.LowLevelClient
 {
     public interface ILowLevelCoapClient : IDisposable
     {
-        Task SendAsync(CoapMessage message, CancellationToken cancellationToken);
+        ValueTask SendAsync(CoapMessage message, CancellationToken cancellationToken);
 
-        Task<CoapMessage> ReceiveAsync(CancellationToken cancellationToken);
+        ValueTask<CoapMessage> ReceiveAsync(CancellationToken cancellationToken);
     }
 }

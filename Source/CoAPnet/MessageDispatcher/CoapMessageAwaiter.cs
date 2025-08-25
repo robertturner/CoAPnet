@@ -32,6 +32,12 @@ namespace CoAPnet.MessageDispatcher
                 return await _taskCompletionSource.Task.ConfigureAwait(false);
             }
         }
+        public Task<CoapMessage> WaitOneAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.Register(() => Fail(new CoapCommunicationTimedOutException()));
+
+            return _taskCompletionSource.Task;   
+        }
 
         public void Complete(CoapMessage message)
         {

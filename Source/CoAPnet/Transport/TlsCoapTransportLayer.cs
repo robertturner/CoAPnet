@@ -16,12 +16,12 @@ namespace CoAPnet.Transport
             throw new NotImplementedException();
         }
 
-        public Task<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public ValueTask<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public ValueTask SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

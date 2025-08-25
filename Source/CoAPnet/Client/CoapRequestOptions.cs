@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CoAPnet.Protocol.Options;
+using System.Collections.Generic;
 
 namespace CoAPnet.Client
 {
@@ -25,7 +26,17 @@ namespace CoAPnet.Client
             get; set;
         }
 
+        public CoapMessageContentFormat? ContentFormat 
+        { 
+            get; set; 
+        }
+
         public ICollection<string> UriQuery
+        {
+            get; set;
+        }
+
+        public CoapOptionBlocks Block1
         {
             get; set;
         }

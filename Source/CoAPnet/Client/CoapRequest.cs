@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoAPnet.Protocol.Options;
+using System;
 
 namespace CoAPnet.Client
 {

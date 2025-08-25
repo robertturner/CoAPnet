@@ -8,8 +8,8 @@ namespace CoAPnet.Transport
     {
         Task ConnectAsync(CoapTransportLayerConnectOptions connectOptions, CancellationToken cancellationToken);
 
-        Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken);
+        ValueTask SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken);
 
-        Task<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken);
+        ValueTask<int> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken);
     }
 }

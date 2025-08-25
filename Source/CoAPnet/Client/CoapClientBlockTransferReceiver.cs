@@ -64,6 +64,7 @@ namespace CoAPnet.Client
                     // TODO: Move custom size to client connect options!
                     //receivedBlock2OptionValue.Size = 1024;
                     receivedBlock2OptionValue.Number++;
+                    receivedBlock2OptionValue.HasFollowingBlocks = false;
 
                     // TODO: Avoid setting value. Create new instead.
                     requestBlock2Option.Value = new CoapMessageOptionUintValue(CoapBlockTransferOptionValueEncoder.Encode(receivedBlock2OptionValue));

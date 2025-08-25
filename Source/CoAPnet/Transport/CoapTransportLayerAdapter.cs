@@ -41,7 +41,7 @@ namespace CoAPnet.Transport
             }
         }
 
-        public async Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public async ValueTask SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace CoAPnet.Transport
             }
         }
 
-        public async Task<int> ReceiveAsync(ArraySegment<byte> receiveBuffer, CancellationToken cancellationToken)
+        public async ValueTask<int> ReceiveAsync(ArraySegment<byte> receiveBuffer, CancellationToken cancellationToken)
         {
             try
             {
